@@ -7,7 +7,7 @@ using Serilog;
 
 namespace GmailBundler.Host;
 
-public class GmailFilteringHost : IHostedService
+public class GmailBundlerHost : IHostedService
 {
     private readonly IGmailServiceWrapper _gmailServiceWrapper;
     private readonly IHostApplicationLifetime _applicationLifetime;
@@ -15,7 +15,7 @@ public class GmailFilteringHost : IHostedService
 
     private readonly ILogger _logger;
     
-    public GmailFilteringHost(
+    public GmailBundlerHost(
         ILogger logger,
         IGmailServiceWrapper gmailServiceWrapper,
         IHostApplicationLifetime hostApplicationLifetime,

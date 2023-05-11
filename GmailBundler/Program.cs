@@ -42,7 +42,7 @@ var hostBuilder = new HostBuilder()
         services.AddTransient<IGmailServiceWrapper, GmailServiceWrapper>();
         services.AddSingleton<ICsvConverter, CsvConverter>();
         services.AddSingleton<IGmailDownloader, GmailDownloader>();
-        services.AddHostedService<GmailFilteringHost>();
+        services.AddHostedService<GmailBundlerHost>();
 
         Log.Logger = CreateLogger(hostContext.Configuration);
 
