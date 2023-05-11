@@ -402,3 +402,5 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 .idea
+
+GmailBundler/appsettings.json
