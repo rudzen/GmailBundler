@@ -79,12 +79,28 @@ public sealed class GmailDownloader : IGmailDownloader
     {
         var messagesResponse = await listRequest.ExecuteAsync(cancellationToken).ConfigureAwait(false);
 
-        var anyMessages = messagesResponse != null && messagesResponse.Messages.Count > 0;
-        
-        if (!anyMessages)
-            _logger.Information("No messages found. query={Query}", query.Query);
+        var validResponse = messagesResponse != null;
 
-        return (anyMessages, messagesResponse);
+        if (!validResponse)
+        {
+            _logger.Warning("Invalid response. was null");
+            return (false, messagesResponse);
+        }
+
+        validResponse = messagesResponse!.Messages != null;
+        
+        if (!validResponse)
+        {
+            _logger.Warning("Invalid response. messages was null");
+            return (false, messagesResponse);
+        }
+
+        validResponse = messagesResponse.Messages!.Count > 0;
+        
+        if (!validResponse)
+            _logger.Information("No messages found. query={Query}", query.Query);
+        
+        return (validResponse, messagesResponse);
     }
     
     private static Gmail ConvertGmail(string label, Message emailDetails)
