@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GmailBundler", "GmailBundler\GmailBundler.csproj", "{19A8871D-D721-4ECB-AF8C-1C2EF5F0874C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GmailBundler.Downloader", "GmailBundler.Downloader\GmailBundler.Downloader.csproj", "{456C404B-D3E8-4B79-A9B8-6FFF4D51C08F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GmailBundler.Csv", "GmailBundler.Csv\GmailBundler.Csv.csproj", "{608097A0-812B-4268-974D-A0100A9F8EE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GmailBundler.Dto", "GmailBundler.Dto\GmailBundler.Dto.csproj", "{3865A902-AA6D-4C9E-BEFB-322F256EE112}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GmailBundler.Configuration", "GmailBundler.Configuration\GmailBundler.Configuration.csproj", "{1BC89190-9128-4E9F-BA07-A5C16F1A5856}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GmailBundler.Csv.Interfaces", "GmailBundler.Csv.Interfaces\GmailBundler.Csv.Interfaces.csproj", "{393B9FC4-434A-4CB4-A036-B9478C584530}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GmailBundler.Downloader.Interfaces", "GmailBundler.Downloader.Interfaces\GmailBundler.Downloader.Interfaces.csproj", "{CFEC912C-9136-41A6-AE15-22EDE56310E9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19A8871D-D721-4ECB-AF8C-1C2EF5F0874C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A8871D-D721-4ECB-AF8C-1C2EF5F0874C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A8871D-D721-4ECB-AF8C-1C2EF5F0874C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A8871D-D721-4ECB-AF8C-1C2EF5F0874C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{456C404B-D3E8-4B79-A9B8-6FFF4D51C08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{456C404B-D3E8-4B79-A9B8-6FFF4D51C08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{456C404B-D3E8-4B79-A9B8-6FFF4D51C08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{456C404B-D3E8-4B79-A9B8-6FFF4D51C08F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{608097A0-812B-4268-974D-A0100A9F8EE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{608097A0-812B-4268-974D-A0100A9F8EE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{608097A0-812B-4268-974D-A0100A9F8EE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{608097A0-812B-4268-974D-A0100A9F8EE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3865A902-AA6D-4C9E-BEFB-322F256EE112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3865A902-AA6D-4C9E-BEFB-322F256EE112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3865A902-AA6D-4C9E-BEFB-322F256EE112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3865A902-AA6D-4C9E-BEFB-322F256EE112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BC89190-9128-4E9F-BA07-A5C16F1A5856}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BC89190-9128-4E9F-BA07-A5C16F1A5856}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BC89190-9128-4E9F-BA07-A5C16F1A5856}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BC89190-9128-4E9F-BA07-A5C16F1A5856}.Release|Any CPU.Build.0 = Release|Any CPU
+		{393B9FC4-434A-4CB4-A036-B9478C584530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{393B9FC4-434A-4CB4-A036-B9478C584530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{393B9FC4-434A-4CB4-A036-B9478C584530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{393B9FC4-434A-4CB4-A036-B9478C584530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFEC912C-9136-41A6-AE15-22EDE56310E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFEC912C-9136-41A6-AE15-22EDE56310E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFEC912C-9136-41A6-AE15-22EDE56310E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFEC912C-9136-41A6-AE15-22EDE56310E9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
