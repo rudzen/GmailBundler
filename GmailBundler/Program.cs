@@ -37,7 +37,7 @@ var hostBuilder = new HostBuilder()
     })
     .ConfigureServices((hostContext, services) =>
     {
-        services.Configure<CsvFormatSettings>(hostContext.Configuration.GetSection("CsvFormat"));
+        services.Configure<CsvFormatSettings>(hostContext.Configuration.GetSection("Csv"));
         services.Configure<GoogleApiSettings>(hostContext.Configuration.GetSection("GoogleApi"));
         services.AddTransient<IGmailServiceWrapper, GmailServiceWrapper>();
         services.AddSingleton<ICsvConverter, CsvConverter>();

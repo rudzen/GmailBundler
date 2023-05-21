@@ -1,7 +1,9 @@
-﻿using GmailBundler.Csv.Interfaces;
+﻿using GmailBundler.Configuration;
+using GmailBundler.Csv.Interfaces;
 using GmailBundler.Downloader.Interfaces;
 using GmailBundler.Dto;
 using Google.Apis.Gmail.v1;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace GmailBundler.Downloader;
@@ -14,14 +16,18 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
     private readonly ICsvConverter _csvConverter;
     private readonly IGmailDownloader _gmailDownloader;
 
+    private readonly string _rootOutputDirectory;
+
     public GmailServiceWrapper(
         ILogger logger,
         ICsvConverter csvConverter,
-        IGmailDownloader gmailDownloader)
+        IGmailDownloader gmailDownloader,
+        IOptions<CsvFormatSettings> options)
     {
         _logger = logger;
         _csvConverter = csvConverter;
         _gmailDownloader = gmailDownloader;
+        _rootOutputDirectory = options.Value.RootDirectory;
     }
 
     public async Task Do(IEnumerable<GmailQuery> queries, CancellationToken cancellationToken)
@@ -46,6 +52,9 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
             results.Add(gmailQuery.Label, labelCsvs);
         }
 
+        if (!Directory.Exists(_rootOutputDirectory))
+            Directory.CreateDirectory(_rootOutputDirectory);
+        
         await WriteCsvData(results, totalRows);
     }
 
@@ -55,14 +64,18 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
 
         const string header = "From ; Subject ; Label ; Date ; Time";
 
-        var now = DateTime.Now;
-        var totalCsv = new List<string>(totalRows + 1);
-        var fileName = $"gmailbundler_{now:yyyy-MM-dd_HH-mm-ss}";
-        totalCsv.Add(header);
+        var now = $"{DateTime.Now:yyyy-MM-dd_HH-mm-ss}";
+        var totalCsv = new List<string>(totalRows + 1) { header };
 
         foreach (var (label, csvList) in mails)
         {
-            var outFile = $"{fileName}-{label}.csv";
+            var file = $"{label}-{csvList.Count}-{now}.csv";
+            var outputDirectory = Path.Combine(_rootOutputDirectory, label);
+
+            if (!Directory.Exists(outputDirectory))
+                Directory.CreateDirectory(outputDirectory);
+            
+            var outFile = Path.Combine(outputDirectory, file);
             _logger.Information("Writing data. file={OutFile},label={Label},rows={Rows}",
                 outFile, label, csvList.Count + 1);
 
@@ -76,9 +89,11 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
             }
         }
 
-        _logger.Information("Writing full csv. file={OutFile}.csv,rows={Rows}", fileName, totalCsv.Count);
+        var totalOutFile = Path.Combine(_rootOutputDirectory, $"{totalCsv.Count}-{now}.csv");
+        
+        _logger.Information("Writing full csv. file={OutFile}.csv,rows={Rows}", totalOutFile, totalCsv.Count);
 
-        await using var fullWriter = File.CreateText($"{fileName}.csv");
+        await using var fullWriter = File.CreateText(totalOutFile);
         foreach (var csv in totalCsv)
             await fullWriter.WriteLineAsync(csv).ConfigureAwait(false);
         

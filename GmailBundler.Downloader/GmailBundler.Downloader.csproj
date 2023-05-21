@@ -8,10 +8,12 @@
 
     <ItemGroup>
       <PackageReference Include="Google.Apis.Gmail.v1" Version="1.60.0.3035" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
         <PackageReference Include="Serilog" Version="3.0.0-dev-01993" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\GmailBundler.Configuration\GmailBundler.Configuration.csproj" />
       <ProjectReference Include="..\GmailBundler.Csv.Interfaces\GmailBundler.Csv.Interfaces.csproj" />
       <ProjectReference Include="..\GmailBundler.Downloader.Interfaces\GmailBundler.Downloader.Interfaces.csproj" />
     </ItemGroup>

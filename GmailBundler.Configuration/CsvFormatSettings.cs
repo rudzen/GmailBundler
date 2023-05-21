@@ -7,4 +7,6 @@ public sealed class CsvFormatSettings
     public string DateFormat { get; init; } = null!;
 
     public string TimeFormat { get; init; } = null!;
+
+    public string RootDirectory { get; init; } = ".";
 }
