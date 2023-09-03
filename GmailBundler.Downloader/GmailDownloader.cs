@@ -114,7 +114,7 @@ public sealed class GmailDownloader : IGmailDownloader
             ResolveFrom(GetHeader(emailDetails, "From")),
             GetHeader(emailDetails, "Subject"),
             label,
-            dateTime
+            ToCet(in dateTime)
         );
     }
 
@@ -136,5 +136,12 @@ public sealed class GmailDownloader : IGmailDownloader
     {
         var header = message.Payload.Headers.FirstOrDefault(h => h.Name == headerName);
         return header != null ? header.Value : string.Empty;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static DateTime ToCet(in DateTime dt)
+    {
+        const string cet = "Central European Standard Time";
+        return TimeZoneInfo.ConvertTimeFromUtc(dt, TimeZoneInfo.FindSystemTimeZoneById(cet));
     }
 }

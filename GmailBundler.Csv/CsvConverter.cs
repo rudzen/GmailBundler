@@ -19,7 +19,7 @@ public sealed class CsvConverter : ICsvConverter
         var config = options.Value;
         _writer = new VariableLengthWriterBuilder<Gmail>()
             .Map(x => x.From, indexColumn: 0)
-            .Map(x => x.Subject, indexColumn: 1)
+            .Map(x => x.Subject.Replace(';', ':'), indexColumn: 1)
             .Map(x => x.Label, indexColumn: 2)
             .Map(x => DateOnly.FromDateTime(x.Date), indexColumn: 3, format: config.DateFormat)
             .Map(x => x.Date, indexColumn: 4, format: config.TimeFormat)
@@ -30,12 +30,22 @@ public sealed class CsvConverter : ICsvConverter
     {
         var length = gmail.From.Length + gmail.Subject.Length + gmail.Label.Length + 50;
 
-        Span<char> destination = new char[length];
-
-        var success = _writer.TryFormat(gmail, destination, out var written);
-
-        if (success)
-            return destination[..written].ToString();
+        bool success;
+        
+        if (length > 1024)
+        {
+            Span<char> destination = new char[length];
+            success = _writer.TryFormat(gmail, destination, out var written);
+            if (success)
+                return destination[..written].ToString();
+        }
+        else
+        {
+            Span<char> destination = stackalloc char[length];
+            success = _writer.TryFormat(gmail, destination, out var written);
+            if (success)
+                return destination[..written].ToString();
+        }
 
         _logger.Warning("unable to write csv");
         return string.Empty;

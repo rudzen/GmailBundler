@@ -76,6 +76,13 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
                 Directory.CreateDirectory(outputDirectory);
             
             var outFile = Path.Combine(outputDirectory, file);
+
+            if (csvList.Count == 0)
+            {
+                _logger.Warning("No date to write, skipping. file={OutFile}", outFile);
+                continue;
+            }
+            
             _logger.Information("Writing data. file={OutFile},label={Label},rows={Rows}",
                 outFile, label, csvList.Count + 1);
 
