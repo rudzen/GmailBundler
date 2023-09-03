@@ -1,10 +1,7 @@
 ﻿using System.Globalization;
-using GmailBundler.Configuration;
-using GmailBundler.Csv;
-using GmailBundler.Csv.Interfaces;
-using GmailBundler.Downloader;
-using GmailBundler.Downloader.Interfaces;
-using GmailBundler.Host;
+using GmailBundler.App.Host;
+using GmailBundler.Domain.Services;
+using GmailBundler.Domain.Settings;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Services;
@@ -39,6 +36,9 @@ var hostBuilder = new HostBuilder()
     {
         services.Configure<CsvFormatSettings>(hostContext.Configuration.GetSection("Csv"));
         services.Configure<GoogleApiSettings>(hostContext.Configuration.GetSection("GoogleApi"));
+        services.AddSingleton<CsvFormatSettings>(provider => provider.GetRequiredService<IOptions<CsvFormatSettings>>().Value);
+        services.AddSingleton<GoogleApiSettings>(provider => provider.GetRequiredService<IOptions<GoogleApiSettings>>().Value);
+
         services.AddTransient<IGmailServiceWrapper, GmailServiceWrapper>();
         services.AddSingleton<ICsvConverter, CsvConverter>();
         services.AddSingleton<IGmailDownloader, GmailDownloader>();
@@ -50,7 +50,7 @@ var hostBuilder = new HostBuilder()
 
         services.AddSingleton(sp =>
         {
-            var googleApiSettings = sp.GetRequiredService<IOptions<GoogleApiSettings>>().Value;
+            var googleApiSettings = sp.GetRequiredService<GoogleApiSettings>();
             var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                 new ClientSecrets
                 {

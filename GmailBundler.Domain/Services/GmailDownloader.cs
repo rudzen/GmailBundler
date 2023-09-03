@@ -1,11 +1,15 @@
 ﻿using System.Runtime.CompilerServices;
-using GmailBundler.Downloader.Interfaces;
-using GmailBundler.Dto;
+using GmailBundler.Domain.Models;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
 using Serilog;
 
-namespace GmailBundler.Downloader;
+namespace GmailBundler.Domain.Services;
+
+public interface IGmailDownloader
+{
+    IAsyncEnumerable<Gmail> DownloadMails(GmailQuery query, [EnumeratorCancellation] CancellationToken cancellationToken);
+}
 
 public sealed class GmailDownloader : IGmailDownloader
 {
@@ -25,7 +29,7 @@ public sealed class GmailDownloader : IGmailDownloader
         _logger.Information("Downloading messages. query={Query}", query.Query);
 
         var pageToken = string.Empty;
-        
+
         do
         {
             var listRequest = CreateListRequest(query, pageToken);
@@ -43,11 +47,11 @@ public sealed class GmailDownloader : IGmailDownloader
             foreach (var messageId in messageIds)
             {
                 var message = await _gmailService
-                    .Users
-                    .Messages
-                    .Get(UserId, messageId)
-                    .ExecuteAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                                    .Users
+                                    .Messages
+                                    .Get(UserId, messageId)
+                                    .ExecuteAsync(cancellationToken)
+                                    .ConfigureAwait(false);
 
                 yield return ConvertGmail(query.Label, message);
             }
@@ -59,9 +63,9 @@ public sealed class GmailDownloader : IGmailDownloader
     private UsersResource.MessagesResource.ListRequest CreateListRequest(GmailQuery query, string? pageToken)
     {
         var listRequest = _gmailService
-            .Users
-            .Messages
-            .List(UserId);
+                          .Users
+                          .Messages
+                          .List(UserId);
 
         listRequest.MaxResults = 100;
         listRequest.Q = query.Query;
@@ -71,7 +75,7 @@ public sealed class GmailDownloader : IGmailDownloader
 
         return listRequest;
     }
-    
+
     private async ValueTask<(bool, ListMessagesResponse?)> GetListMessageResponse(
         GmailQuery query,
         UsersResource.MessagesResource.ListRequest listRequest,
@@ -88,7 +92,7 @@ public sealed class GmailDownloader : IGmailDownloader
         }
 
         validResponse = messagesResponse!.Messages != null;
-        
+
         if (!validResponse)
         {
             _logger.Warning("Invalid response. messages was null");
@@ -96,13 +100,13 @@ public sealed class GmailDownloader : IGmailDownloader
         }
 
         validResponse = messagesResponse.Messages!.Count > 0;
-        
+
         if (!validResponse)
             _logger.Information("No messages found. query={Query}", query.Query);
-        
+
         return (validResponse, messagesResponse);
     }
-    
+
     private static Gmail ConvertGmail(string label, Message emailDetails)
     {
         var dateTime = emailDetails.InternalDate.HasValue

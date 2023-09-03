@@ -1,11 +1,11 @@
-﻿using GmailBundler.Configuration;
-using GmailBundler.Downloader.Interfaces;
-using GmailBundler.Dto;
+﻿using GmailBundler.Domain.Models;
+using GmailBundler.Domain.Services;
+using GmailBundler.Domain.Settings;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Serilog;
 
-namespace GmailBundler.Host;
+namespace GmailBundler.App.Host;
 
 public class GmailBundlerHost : IHostedService
 {

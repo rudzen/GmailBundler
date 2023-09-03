@@ -1,16 +1,19 @@
-﻿using GmailBundler.Configuration;
-using GmailBundler.Csv.Interfaces;
-using GmailBundler.Downloader.Interfaces;
-using GmailBundler.Dto;
+﻿using GmailBundler.Domain.Models;
+using GmailBundler.Domain.Settings;
 using Google.Apis.Gmail.v1;
 using Microsoft.Extensions.Options;
 using Serilog;
 
-namespace GmailBundler.Downloader;
+namespace GmailBundler.Domain.Services;
+
+public interface IGmailServiceWrapper
+{
+    Task Do(IEnumerable<GmailQuery> queries, CancellationToken cancellationToken);
+}
 
 public sealed class GmailServiceWrapper : IGmailServiceWrapper
 {
-    public static readonly string[] Scopes = { GmailService.Scope.GmailReadonly };
+    public static readonly string[] Scopes = [GmailService.Scope.GmailReadonly];
 
     private readonly ILogger _logger;
     private readonly ICsvConverter _csvConverter;
@@ -22,12 +25,12 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
         ILogger logger,
         ICsvConverter csvConverter,
         IGmailDownloader gmailDownloader,
-        IOptions<CsvFormatSettings> options)
+        CsvFormatSettings options)
     {
         _logger = logger;
         _csvConverter = csvConverter;
         _gmailDownloader = gmailDownloader;
-        _rootOutputDirectory = options.Value.RootDirectory;
+        _rootOutputDirectory = options.RootDirectory;
     }
 
     public async Task Do(IEnumerable<GmailQuery> queries, CancellationToken cancellationToken)
@@ -39,7 +42,7 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
         {
             var labelCsvs = new List<string>();
             var a = _gmailDownloader.DownloadMails(gmailQuery, cancellationToken);
-            await foreach (var gmail in a.WithCancellation(cancellationToken))
+            await foreach (var gmail in a)
             {
                 var csv = _csvConverter.Create(gmail);
                 labelCsvs.Add(csv);
@@ -54,7 +57,7 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
 
         if (!Directory.Exists(_rootOutputDirectory))
             Directory.CreateDirectory(_rootOutputDirectory);
-        
+
         await WriteCsvData(results, totalRows);
     }
 
@@ -74,7 +77,7 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
 
             if (!Directory.Exists(outputDirectory))
                 Directory.CreateDirectory(outputDirectory);
-            
+
             var outFile = Path.Combine(outputDirectory, file);
 
             if (csvList.Count == 0)
@@ -82,7 +85,7 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
                 _logger.Warning("No date to write, skipping. file={OutFile}", outFile);
                 continue;
             }
-            
+
             _logger.Information("Writing data. file={OutFile},label={Label},rows={Rows}",
                 outFile, label, csvList.Count + 1);
 
@@ -97,13 +100,13 @@ public sealed class GmailServiceWrapper : IGmailServiceWrapper
         }
 
         var totalOutFile = Path.Combine(_rootOutputDirectory, $"{totalCsv.Count}-{now}.csv");
-        
+
         _logger.Information("Writing full csv. file={OutFile}.csv,rows={Rows}", totalOutFile, totalCsv.Count);
 
         await using var fullWriter = File.CreateText(totalOutFile);
         foreach (var csv in totalCsv)
             await fullWriter.WriteLineAsync(csv).ConfigureAwait(false);
-        
+
         _logger.Information("Done..");
     }
 }
