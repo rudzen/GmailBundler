@@ -1,4 +1,4 @@
-﻿namespace GmailBundler.Configuration;
+﻿namespace GmailBundler.Domain.Settings;
 
 public sealed class CsvFormatSettings
 {

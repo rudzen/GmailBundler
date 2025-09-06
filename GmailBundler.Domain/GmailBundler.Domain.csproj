@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <PackageReference Include="Google.Apis.Gmail.v1"/>
+        <PackageReference Include="Microsoft.Extensions.Options"/>
+        <PackageReference Include="RecordParser"/>
+        <PackageReference Include="Serilog"/>
+    </ItemGroup>
+
+</Project>
